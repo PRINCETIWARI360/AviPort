@@ -1,1 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avinash Tiwari — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  :root {
+    --bg: #0b0f1a;
+    --bg2: #111827;
+    --bg3: #1a2235;
+    --gold: #c9a84c;
+    --gold-light: #e8c87e;
+    --gold-dim: #7a5e28;
+    --text: #f0ece4;
+    --text-muted: #8a9ab5;
+    --text-dim: #4a5568;
+    --border: rgba(201,168,76,0.18);
+    --border-subtle: rgba(255,255,255,0.06);
+    --accent: #1d9e75;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 4rem;
+    border-bottom: 1px solid var(--border-subtle);
+    background: rgba(11,15,26,0.85);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    color: var(--gold);
+  }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 4rem 6rem;
+    position: relative;
+  }
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+  }
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--border);
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.2s forwards;
+  }
+  .badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.35s forwards;
+  }
+  .hero h1 span {
+    color: var(--gold);
+    position: relative;
+  }
+  .hero-sub {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    color: var(--text-muted);
+    font-weight: 400;
+    font-style: italic;
+    margin-bottom: 1.75rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+  .hero-desc {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.65s forwards;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold);
+    color: #0b0f1a;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    padding: 0.8rem 1.8rem;
+    border-radius: 4px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    padding: 0.8rem 1.8rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, color 0.2s, transform 0.15s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
+
+  .hero-stats {
+    position: absolute;
+    bottom: 3rem;
+    right: 4rem;
+    display: flex;
+    gap: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+  .stat { text-align: right; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(24px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* Section wrapper */
+  section {
+    padding: 6rem 4rem;
+    position: relative;
+  }
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--gold-dim);
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3rem;
+  }
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--border) 0%, transparent 100%);
+    margin: 0 4rem;
+  }
+
+  /* About */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .about-text p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.9;
+    margin-bottom: 1.25rem;
+  }
+  .about-text p strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .about-side { display: flex; flex-direction: column; gap: 1.5rem; }
+  .info-card {
+    background: var(--bg2);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: border-color 0.2s;
+  }
+  .info-card:hover { border-color: var(--border); }
+  .info-icon {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    background: rgba(201,168,76,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .info-label { font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
+  .info-value { font-size: 0.9rem; color: var(--text); margin-top: 2px; }
+
+  /* Experience */
+  .exp-section { background: var(--bg2); }
+  .timeline { position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--gold-dim) 0%, transparent 100%);
+  }
+  .timeline-item {
+    padding-left: 2.5rem;
+    padding-bottom: 3rem;
+    position: relative;
+  }
+  .timeline-item:last-child { padding-bottom: 0; }
+  .timeline-dot {
+    position: absolute;
+    left: -5px; top: 8px;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 12px rgba(201,168,76,0.4);
+  }
+  .timeline-item:not(:first-child) .timeline-dot {
+    background: var(--bg3);
+    border: 1px solid var(--gold-dim);
+    box-shadow: none;
+  }
+  .timeline-date {
+    font-size: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+  }
+  .timeline-company {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+  }
+  .timeline-role {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .timeline-location {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .timeline-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    max-width: 600px;
+  }
+  .timeline-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-top: 0.75rem;
+    margin-right: 6px;
+  }
+
+  /* Skills */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .skill-card {
+    background: var(--bg2);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 1.75rem;
+    transition: border-color 0.25s, transform 0.2s;
+  }
+  .skill-card:hover { border-color: var(--border); transform: translateY(-3px); }
+  .skill-card-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .skill-card-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+  }
+  .skill-bar {
+    height: 3px;
+    background: var(--bg3);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 0.4rem;
+  }
+  .skill-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 2px;
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .skill-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    text-align: right;
+  }
+  .tools-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .tool-pill {
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    background: var(--bg3);
+    border: 1px solid var(--border-subtle);
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+
+  /* Education */
+  .edu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .edu-card {
+    background: var(--bg2);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s;
+  }
+  .edu-card:hover { border-color: var(--border); }
+  .edu-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--gold), transparent);
+  }
+  .edu-card:nth-child(2)::before { background: linear-gradient(180deg, var(--accent), transparent); }
+  .edu-card:nth-child(3)::before { background: linear-gradient(180deg, #7a5e28, transparent); }
+  .edu-card:nth-child(4)::before { background: linear-gradient(180deg, #4a5568, transparent); }
+  .edu-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .edu-degree {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+  }
+  .edu-field {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .edu-inst {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* Certifications */
+  .cert-section { background: var(--bg2); }
+  .cert-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .cert-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    transition: border-color 0.2s;
+  }
+  .cert-item:hover { border-color: var(--border); }
+  .cert-icon-wrap {
+    width: 44px; height: 44px;
+    border-radius: 8px;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .cert-name { font-size: 0.9rem; color: var(--text); font-weight: 400; }
+  .cert-issuer { font-size: 0.75rem; color: var(--text-dim); margin-top: 2px; }
+  .cert-badge {
+    margin-left: auto;
+    font-size: 0.67rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(29,158,117,0.08);
+    border: 1px solid rgba(29,158,117,0.2);
+    padding: 3px 10px;
+    border-radius: 100px;
+    flex-shrink: 0;
+  }
+
+  /* Contact */
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .contact-text p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+  }
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 1.4rem;
+    background: var(--bg2);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .contact-link:hover { border-color: var(--border); transform: translateX(4px); }
+  .contact-link-icon {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    background: rgba(201,168,76,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .contact-link-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+  .contact-link-value { font-size: 0.88rem; color: var(--text); margin-top: 1px; }
+  .contact-link-arrow { margin-left: auto; color: var(--text-dim); font-size: 1.2rem; }
+
+  /* Footer */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    color: var(--gold);
+  }
+  .footer-copy {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  /* Scroll animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    .about-grid, .contact-inner, .edu-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-stats { position: static; flex-direction: row; justify-content: flex-start; gap: 2rem; margin-top: 3rem; }
+    .divider { margin: 0 1.5rem; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">AT</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#education">Education</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Available for Managerial Roles
+    </div>
+    <h1>Avinash<br><span>Tiwari</span></h1>
+    <p class="hero-sub">Inspection Engineer · Operations · Finance</p>
+    <p class="hero-desc">Dynamic professional bridging Inspection Engineering and Finance — skilled in SAP, Power BI, and advanced Excel, with proven impact in city gas distribution infrastructure.</p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary">Get in Touch →</a>
+      <a href="#experience" class="btn-outline">View Experience</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">3+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Certifications</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">MBA</div>
+      <div class="stat-label">Finance, 2025</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- About -->
+<section id="about">
+  <div class="section-label">About Me</div>
+  <h2 class="section-title">Engineering Meets Finance</h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>I am a <strong>results-oriented professional</strong> with progressive experience in Inspection Engineering and Operations Management within the energy and infrastructure sector.</p>
+      <p>Currently working as a <strong>Third Party Inspection Engineer at Anchor Offshore Services Ltd</strong>, I focus on official documentation, billing, data management, tendering, and budgeting — ensuring accuracy, compliance, and efficiency in project support operations within the city gas distribution sector.</p>
+      <p>My MBA in Finance from AKTU complements my mechanical engineering background, giving me a powerful combination of <strong>operational expertise and strategic financial insight</strong>. I leverage SAP, Power BI, and advanced Excel to drive MIS reporting, compliance monitoring, and management decision support.</p>
+    </div>
+    <div class="about-side reveal">
+      <div class="info-card">
+        <div class="info-icon">📍</div>
+        <div>
+          <div class="info-label">Location</div>
+          <div class="info-value">Delhi, India</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🎓</div>
+        <div>
+          <div class="info-label">Education</div>
+          <div class="info-value">MBA Finance — AKTU, 2025</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🏭</div>
+        <div>
+          <div class="info-label">Industry</div>
+          <div class="info-value">Energy & Infrastructure (CGD)</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🎯</div>
+        <div>
+          <div class="info-label">Seeking</div>
+          <div class="info-value">Manager / Assistant Manager Roles</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">📊</div>
+        <div>
+          <div class="info-label">Core Tools</div>
+          <div class="info-value">SAP · Power BI · Excel · Tally Prime</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Experience -->
+<section class="exp-section" id="experience">
+  <div class="section-label">Work History</div>
+  <h2 class="section-title">Professional Experience</h2>
+  <div class="timeline">
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">June 2025 — Present</div>
+      <div class="timeline-company">Anchor Offshore Services Ltd.</div>
+      <div class="timeline-role">Third Party Inspection Engineer</div>
+      <div class="timeline-location">📍 Delhi, India</div>
+      <p class="timeline-desc">Contributing to key functions including official documentation, billing, data management, tendering, and budgeting. Focused on ensuring accuracy, compliance, and efficiency in project support operations within the city gas distribution sector. Eager to grow professionally while adding value to critical infrastructure development.</p>
+      <div>
+        <span class="timeline-tag">Inspection Engineering</span>
+        <span class="timeline-tag">Tendering</span>
+        <span class="timeline-tag">Billing</span>
+        <span class="timeline-tag">Compliance</span>
+        <span class="timeline-tag">CGD Sector</span>
+      </div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">June 2024 — July 2025 · 1 yr 2 mos</div>
+      <div class="timeline-company">Indraprastha Gas Limited (IGL)</div>
+      <div class="timeline-role">Data Entry Operator</div>
+      <div class="timeline-location">📍 Delhi, India</div>
+      <p class="timeline-desc">Managed data operations for Indraprastha Gas Limited, one of India's foremost city gas distribution companies. Handled MIS reporting, vendor coordination, and operational data accuracy using SAP and advanced Excel for management decision support.</p>
+      <div>
+        <span class="timeline-tag">SAP</span>
+        <span class="timeline-tag">MIS Reporting</span>
+        <span class="timeline-tag">Data Management</span>
+        <span class="timeline-tag">IGL</span>
+      </div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">June 2022 — June 2024 · 2 yrs 1 mo</div>
+      <div class="timeline-company">Digisoft Services</div>
+      <div class="timeline-role">Tally Prime Service & Support</div>
+      <div class="timeline-location">📍 Uttar Pradesh, India</div>
+      <p class="timeline-desc">Delivered Tally Prime service and support across client accounts, managing financial data entries, accounts reconciliation, and software-based reporting. Built foundational expertise in financial operations and SME accounting workflows.</p>
+      <div>
+        <span class="timeline-tag">Tally Prime</span>
+        <span class="timeline-tag">Financial Data</span>
+        <span class="timeline-tag">Accounts Reconciliation</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="section-label">Expertise</div>
+  <h2 class="section-title">Skills & Tools</h2>
+  <div class="skills-grid">
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">📊</div>
+      <div class="skill-card-title">Data Visualization</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="88"></div></div>
+      <div class="skill-pct">88%</div>
+      <div class="tools-row">
+        <span class="tool-pill">Power BI</span>
+        <span class="tool-pill">Charts</span>
+        <span class="tool-pill">Dashboards</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">🔄</div>
+      <div class="skill-card-title">Data Transformation</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="82"></div></div>
+      <div class="skill-pct">82%</div>
+      <div class="tools-row">
+        <span class="tool-pill">Power Query</span>
+        <span class="tool-pill">ETL</span>
+        <span class="tool-pill">Excel</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">🏗️</div>
+      <div class="skill-card-title">Data Modeling</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="78"></div></div>
+      <div class="skill-pct">78%</div>
+      <div class="tools-row">
+        <span class="tool-pill">DAX</span>
+        <span class="tool-pill">Relationships</span>
+        <span class="tool-pill">Star Schema</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">⚙️</div>
+      <div class="skill-card-title">SAP & ERP Systems</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="75"></div></div>
+      <div class="skill-pct">75%</div>
+      <div class="tools-row">
+        <span class="tool-pill">SAP</span>
+        <span class="tool-pill">MIS Reports</span>
+        <span class="tool-pill">Operations</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">💰</div>
+      <div class="skill-card-title">Financial Management</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="80"></div></div>
+      <div class="skill-pct">80%</div>
+      <div class="tools-row">
+        <span class="tool-pill">Tally Prime</span>
+        <span class="tool-pill">Budgeting</span>
+        <span class="tool-pill">Billing</span>
+      </div>
+    </div>
+
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">📋</div>
+      <div class="skill-card-title">Operations Management</div>
+      <div class="skill-bar"><div class="skill-fill" data-pct="85"></div></div>
+      <div class="skill-pct">85%</div>
+      <div class="tools-row">
+        <span class="tool-pill">Tendering</span>
+        <span class="tool-pill">Vendor Coordination</span>
+        <span class="tool-pill">Compliance</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Education -->
+<section id="education">
+  <div class="section-label">Academic Background</div>
+  <h2 class="section-title">Education</h2>
+  <div class="edu-grid">
+
+    <div class="edu-card reveal">
+      <div class="edu-year">2025</div>
+      <div class="edu-degree">Master of Business Administration</div>
+      <div class="edu-field">Finance & Financial Management Services</div>
+      <div class="edu-inst">Dr. A.P.J. Abdul Kalam Technical University (AKTU), Lucknow</div>
+    </div>
+
+    <div class="edu-card reveal">
+      <div class="edu-year">Ongoing</div>
+      <div class="edu-degree">Diploma in Mechanical Engineering</div>
+      <div class="edu-field">Mechanical Engineering</div>
+      <div class="edu-inst">Maharaja Agrasen Himalayan Garhwal University</div>
+    </div>
+
+    <div class="edu-card reveal">
+      <div class="edu-year">2019 – 2022</div>
+      <div class="edu-degree">Graduation (B.Sc.)</div>
+      <div class="edu-field">General Science</div>
+      <div class="edu-inst">Deen Dayal Upadhyaya (DDU) Gorakhpur University</div>
+    </div>
+
+    <div class="edu-card reveal">
+      <div class="edu-year">2017 – 2019</div>
+      <div class="edu-degree">Intermediate (10+2)</div>
+      <div class="edu-field">Physics, Chemistry & Mathematics</div>
+      <div class="edu-inst">UPMSP — Uttar Pradesh State Board</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Certifications -->
+<section class="cert-section" id="certifications">
+  <div class="section-label">Credentials</div>
+  <h2 class="section-title">Certifications</h2>
+  <div class="cert-row">
+
+    <div class="cert-item reveal">
+      <div class="cert-icon-wrap">📊</div>
+      <div>
+        <div class="cert-name">Analyzing and Visualizing Data with Microsoft Power BI</div>
+        <div class="cert-issuer">Microsoft · Power BI Certification</div>
+      </div>
+      <div class="cert-badge">Verified</div>
+    </div>
+
+    <div class="cert-item reveal">
+      <div class="cert-icon-wrap">📗</div>
+      <div>
+        <div class="cert-name">Microsoft Excel</div>
+        <div class="cert-issuer">Microsoft · Excel Proficiency Certificate</div>
+      </div>
+      <div class="cert-badge">Verified</div>
+    </div>
+
+    <div class="cert-item reveal">
+      <div class="cert-icon-wrap">🧾</div>
+      <div>
+        <div class="cert-name">Tally Prime Certificate</div>
+        <div class="cert-issuer">Tally Solutions · Accounting Software</div>
+      </div>
+      <div class="cert-badge">Verified</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="section-label">Get in Touch</div>
+  <h2 class="section-title">Let's Connect</h2>
+  <div class="contact-inner">
+    <div class="contact-text reveal">
+      <p>I am actively seeking <strong style="color:var(--text)">Manager / Assistant Manager</strong> roles in Operations, Inspection Engineering, or Finance-adjacent functions within the energy and infrastructure sector.</p>
+      <p>Whether you have an opportunity, a project, or just want to connect — my inbox is always open.</p>
+    </div>
+    <div class="contact-links reveal">
+      <a href="mailto:tiwariavinashkumar02@gmail.com" class="contact-link">
+        <div class="contact-link-icon">✉️</div>
+        <div>
+          <div class="contact-link-label">Email</div>
+          <div class="contact-link-value">tiwariavinashkumar02@gmail.com</div>
+        </div>
+        <div class="contact-link-arrow">→</div>
+      </a>
+      <a href="https://www.linkedin.com/in/avinash-tiwari70" target="_blank" class="contact-link">
+        <div class="contact-link-icon">💼</div>
+        <div>
+          <div class="contact-link-label">LinkedIn</div>
+          <div class="contact-link-value">linkedin.com/in/avinash-tiwari70</div>
+        </div>
+        <div class="contact-link-arrow">→</div>
+      </a>
+      <div class="contact-link">
+        <div class="contact-link-icon">📍</div>
+        <div>
+          <div class="contact-link-label">Location</div>
+          <div class="contact-link-value">Delhi, India — Open to Relocation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-name">Avinash Tiwari</div>
+  <div class="footer-copy">© 2025 · Inspection Engineer · MBA Finance</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        // Trigger skill bars
+        const fills = e.target.querySelectorAll('.skill-fill');
+        fills.forEach(f => {
+          f.style.width = f.dataset.pct + '%';
+        });
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Animate skill bars that are already visible
+  document.querySelectorAll('.skill-card.visible .skill-fill').forEach(f => {
+    f.style.width = f.dataset.pct + '%';
+  });
+</script>
+</body>
+</html>
